@@ -2,6 +2,7 @@ package com.example.longyuan.httpframeworktest;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.example.longyuan.httpframeworktest.network.api.PetApi;
@@ -31,7 +32,12 @@ public class MainActivity extends Activity {
         mPetApi.getString()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(data -> mTextView.setText(data));
+                .subscribe(data -> mTextView.setText(data),
+                        throwable -> processError(throwable));
 
+    }
+
+    private void processError(Throwable e) {
+        Log.e("Test", e.getLocalizedMessage(), e);
     }
 }
