@@ -1,14 +1,17 @@
 package com.example.longyuan.httpframeworktest;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -32,6 +35,8 @@ public class MainActivity extends Activity {
 
     private TextView mTextView;
 
+    private ImageView mImageView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +46,8 @@ public class MainActivity extends Activity {
         App.getAppComponent().inject(this);
 
         mTextView = (TextView) findViewById(R.id.text);
+
+        mImageView = (ImageView) findViewById(R.id.image);
 
         // Retrofit + rx
         /*mPetApi.getString()
@@ -127,8 +134,24 @@ public class MainActivity extends Activity {
 
             }
         });
-        mRequestQueue.add(gsonRequest);
+        //mRequestQueue.add(gsonRequest);
 
+        url = "http://lorempixel.com/400/200/sports/";
+
+        ImageRequest imageRequest = new ImageRequest(url, new Response.Listener<Bitmap>() {
+            @Override
+            public void onResponse(Bitmap response) {
+                mImageView.setImageBitmap(response);
+
+            }
+        }, 400, 200, ImageView.ScaleType.FIT_CENTER,null, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+        //mRequestQueue.add(jsObjRequest);
+        mRequestQueue.add(imageRequest);
 
     }
 
