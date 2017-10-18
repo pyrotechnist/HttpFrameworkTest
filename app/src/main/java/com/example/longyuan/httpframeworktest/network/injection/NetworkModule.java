@@ -1,5 +1,9 @@
 package com.example.longyuan.httpframeworktest.network.injection;
 
+import android.content.Context;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.example.longyuan.httpframeworktest.network.api.PetApi;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -24,8 +28,12 @@ public class NetworkModule {
 
     String mBaseUrl;
 
-    public NetworkModule(String mBaseUrl) {
+
+    Context mContext;
+
+    public NetworkModule(String mBaseUrl,Context context) {
         this.mBaseUrl = mBaseUrl;
+        this.mContext = context;
     }
 
     @Provides
@@ -60,6 +68,12 @@ public class NetworkModule {
     @Singleton
     public PetApi providePetApi(Retrofit retrofit) {
         return retrofit.create(PetApi.class);
+    }
+
+    @Provides
+    @Singleton
+    public RequestQueue provideRequestQueue() {
+        return Volley.newRequestQueue(mContext);
     }
 
 }

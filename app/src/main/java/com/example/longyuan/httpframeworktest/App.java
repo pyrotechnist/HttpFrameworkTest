@@ -18,7 +18,7 @@ public class App extends Application {
         super.onCreate();
 
         mAppComponent = DaggerAppComponent.builder()
-                .networkModule(new NetworkModule("http://10.0.2.2:1337"))
+                .networkModule(new NetworkModule("http://10.0.2.2:1337",this))
                 .build();
 
     }
