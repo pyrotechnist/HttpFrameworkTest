@@ -25,6 +25,11 @@ import org.json.JSONObject;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
 public class MainActivity extends Activity {
 
     @Inject
@@ -33,30 +38,40 @@ public class MainActivity extends Activity {
     @Inject
     RequestQueue mRequestQueue;
 
-    private TextView mTextView;
+    @BindView(R.id.text)
+    TextView mTextView;
 
-    private ImageView mImageView;
-
+    @BindView(R.id.image)
+    ImageView mImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
         App.getAppComponent().inject(this);
 
-        mTextView = (TextView) findViewById(R.id.text);
+        //testRetrofit();
 
-        mImageView = (ImageView) findViewById(R.id.image);
+        testVolley();
+
+    }
+
+    private void testRetrofit(){
 
         // Retrofit + rx
-        /*mPetApi.getString()
+        mPetApi.getString()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(data -> mTextView.setText(data),
-                        throwable -> processError(throwable));*/
+                        throwable -> processError(throwable));
 
 
+    }
+
+
+    private void testVolley(){
 
         // Volley
         // Instantiate the RequestQueue.
@@ -71,7 +86,7 @@ public class MainActivity extends Activity {
                     @Override
                     public void onResponse(String response) {
                         // Display the first 500 characters of the response string.
-                       // mTextView.setText("Response is: "+ response.substring(0,500));
+                        // mTextView.setText("Response is: "+ response.substring(0,500));
                         mTextView.setText("Response is: "+ response);
                     }
                 }, new Response.ErrorListener() {
@@ -102,11 +117,11 @@ public class MainActivity extends Activity {
                             Gson gson = new Gson();
                             University university;
                             university = gson.fromJson(response.toString(),University.class);
-                            mTextView.setText(""+university.getId());
+                            mTextView.setText("University: "+university.getName());
 
                         }catch (Exception e) {
                             // If an error occurs, this prints the error to the log
-                            e.printStackTrace();
+                            Log.e("",e.getMessage());
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -118,7 +133,7 @@ public class MainActivity extends Activity {
                     }
                 });
 
-        //queue.add(jsObjRequest);
+        mRequestQueue.add(jsObjRequest);
 
 
         // Volley use customized Request to parse json
@@ -151,9 +166,11 @@ public class MainActivity extends Activity {
             }
         });
         //mRequestQueue.add(jsObjRequest);
-        mRequestQueue.add(imageRequest);
+        //mRequestQueue.add(imageRequest);
+
 
     }
+
 
     private void processError(Throwable e) {
         Log.e("Test", e.getLocalizedMessage(), e);
